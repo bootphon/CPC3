@@ -114,8 +114,6 @@ def update_base_parser(parser):
     parser.add_argument("--max_x_across", type=int, default=5,
                         help="When computing the ABX across score, maximum"
                              "number of speaker X to sample per couple A,B")
-    parser.add_argument("--out", type=str, default=None,
-                        help="Path where the results should be saved")
     parser.add_argument("--level_gru", type=int, default=None)
 
 
@@ -152,14 +150,21 @@ def parse_args(argv):
                                    'using the output of the encoder network.')
     parser_checkpoint.add_argument('-n', '--num_processes', type=int, default=40,
                                    help='Number of processes to use for group computation')
+    parser_checkpoint.add_argument("--out", type=str, default=None,
+                                   help="Path where the results should be saved")
 
     parser_db = subparsers.add_parser('from_pre_computed')
     update_base_parser(parser_db)
-    parser_db.add_argument('path_features', type=str,
+    parser_db.add_argument('path_item_file', type=str,
+                           help="Path to the ABX .item file containing "
+                                "the triplets labels")
+    parser_db.add_argument('path_dataset', type=str,
                            help="Path to pre-computed torch features (.pt)")
     parser_db.add_argument('--file_extension', type=str,
                            default='.pt', help='Extension of each feature '
                            'in the dataset')
+    parser_db.add_argument("--out", type=str, required=True,
+                           help="Path where the results should be saved")
 
     # multi-gpu / multi-node
     return base_parser.parse_args(argv)
